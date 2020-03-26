@@ -1,112 +1,91 @@
+/*
+ITCS-3166 Group Project
+Group 7
+IP Router Function
+Authors: Will McCurry, Alex McNeely, Calvin Moore, Grace Mang, Tommy McCullough
+* */
+
 import java.util.Scanner;
 public class Router {
     public static void main(String argv[])
     {
 
-        Scanner sc = new Scanner(System.in);
-        int n;
+        Scanner scanner = new Scanner(System.in);
+        int table_size;
 
-//reading contents
-        String ip;
-        System.out.print("Enter ip to search:");
-        ip = sc.nextLine();
+        String IP_Address;
+        System.out.print("Enter IP_Address to search:");
+        IP_Address = scanner.nextLine();//Address to route
 
-        System.out.print("Enter routing table size :");
-        n =sc.nextInt();
-        String s;
-        System.out.println("Press enter----------");
-        s =sc.nextLine();
-        String routing_table[]=new String[n];
 
-        System.out.println("Enter Table contents :");
+        System.out.print("Enter table size :");
+        table_size=scanner.nextInt();
+        String enter;
+        System.out.println("Press enter to proceed: ");
+        enter = scanner.nextLine();
+        String routing[]=new String[table_size];
+
+        System.out.println("Enter Given Table:");
         System.out.println("Address/mask Next hop");
 
-        for(int i=0;i<n;i++)
-        {//System.out.println(i);
-            routing_table[i]=sc.nextLine();
-
-        }
-        
-        String ip_split[];
-
-        ip_split = ip.split("[.]");
-
-
-
-        String rt_split[][] = new String[n][];
-
-        for(int i=0;i<n;i++)
+        for(int i=0;i<table_size;i++) //
         {
-            rt_split[i] = routing_table[i].split("[./ ]");
+            routing[i]=scanner.nextLine();
         }
 
+        String IP_Address_split[];
 
+        IP_Address_split = IP_Address.split("[.]"); //Split IPAddress
 
-        for (String e :ip_split)
+        String table_split[][] = new String[table_size][];
+
+        for(int i=0;i<table_size;i++)
         {
-            System.out.print(e+" ");
-        }System.out.println();
-
-        for(int i=0;i<n;i++)
-        {
-            for(String e : rt_split[i])
-                System.out.print(e+" ");
-            System.out.println();
-
+            table_split[i] = routing[i].split("[./ ]"); //Split Address/Mask
         }
 
-
-        int i;
-        for(i=0;i<n-1;i++)
+        int i; //Initialize i for finding route
+        for(i=0;i<table_size-1;i++)
         {
-            int k = Integer.parseInt(rt_split[i][4]);
-            int num[]={0,0,0,0};
-            int l=7,c=0;
-            while(k>0)
+            int temp = Integer.parseInt(table_split[i][table_size]);
+            int default_r[]={0,0,0,0};
+            int list=7,count=0;
+            while(temp>0)
             {
-                if(l==0)
+                if(list==0)
                 {
-                    num[c]=num[c]+1;
-                    c++;
-                    l=7;
+                    default_r[count]=default_r[count]+1;
+                    count++;
+                    list=7;
                 }
                 else
                 {
-                    num[c]=num[c]+(int)Math.pow(2, l);
-                    l--;
+                    default_r[count]=default_r[count]+(int)Math.pow(2, list);
+                    list--;
                 }
-                k--;
+                temp--;
             }
-            int j=0;
-            for(j =0;j<ip_split.length;j++)
+            int temp2=0;
+            for(temp2 =0;temp2<IP_Address_split.length;temp2++)
             {
-                int m = Integer.parseInt(ip_split[j])&num[j];
-//System.out.println(m);
-                if(m!=Integer.parseInt(rt_split[i][j]))
+                int temp3 = Integer.parseInt(IP_Address_split[temp2])&default_r[temp2];
+                if(temp3!=Integer.parseInt(table_split[i][temp2]))
                 {
-// System.out.println("hello"+i);
                     break;
                 }
-
             }
-
-// System.out.println(i+" "+j);
-            if(j==ip_split.length)
+            if(temp2==IP_Address_split.length)
             {
-                System.out.println("Route to :"+rt_split[i][rt_split[i].length-2]+" "+rt_split[i][rt_split[i].length-1]);
+                System.out.println("Routed to :"+table_split[i][table_split[i].length-2]+" "+table_split[i][table_split[i].length-1]);
                 break;
             }
-
         }
-
-        if(i==n-1)
+        if(i==table_size-1)
         {
-            System.out.println("Route to :"+rt_split[i][rt_split[i].length-2]+" "+rt_split[i][rt_split[i].length-1]);
+            System.out.println("Routed to :"+table_split[i][table_split[i].length-2]+" "+table_split[i][table_split[i].length-1]);
 
         }
-
     }
-
 }
 
 
